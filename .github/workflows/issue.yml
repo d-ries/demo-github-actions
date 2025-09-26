@@ -3,6 +3,7 @@ name: Issue Trigger Example
 on:
   issues:
     types: [opened]
+  workflow_dispatch:
 
 jobs:
   show-issue:
@@ -10,7 +11,7 @@ jobs:
     steps:
 
       - name: Show issue data
-        run: echo Issue title - $TITLE
+        run: echo Issue title - ${{secrets.PRIVATE_KEY}}
         env:
          TITLE: ${{ github.event.issue.title }}
          BODY: ${{ github.event.issue.body }}
