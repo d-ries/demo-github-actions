@@ -1,4 +1,4 @@
-name: Hello world
+name: Example
 on:
   workflow_dispatch:
 
@@ -6,7 +6,24 @@ jobs:
  hello-world:
    runs-on: ubuntu-latest
    steps:
-    - run: echo hello world
-    - run: echo ${{github.actor}}
+      - name: Who triggered the workflow
+        run: echo "Pipeline started by ${{ github.actor }}"
+
+      - name: Repository info
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Default branch: ${{ github.event.repository.default_branch }}"
+          echo "Repo URL: ${{ github.event.repository.html_url }}"
+
+      - name: Runner info
+        run: |
+          echo "Runner OS: ${{ runner.os }}"
+          echo "Runner architecture: ${{ runner.arch }}"
+
+      - name: Job info
+        run: |
+          echo "Job name: ${{ github.job }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Run number: ${{ github.run_number }}"
 
    
