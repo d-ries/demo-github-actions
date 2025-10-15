@@ -1,0 +1,55 @@
+name: exercise 1 ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout calculator app code
+        uses: actions/checkout@v4
+        with:
+          repository: 'PXL-2TIN-DevOps-Resources/calculator-app-finished'
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm test -- --coverage --watchAll=false
+
+      - name: Generate test coverage report
+        run: |
+          echo "Test coverage report generated"
+          ls -la coverage/
+
+      - name: Upload test results artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ github.run_number }}
+          path: |
+            coverage/
+            junit.xml
+          retention-days: 30
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          directory: ./coverage/
+          flags: unittests
+          name: codecov-umbrella
